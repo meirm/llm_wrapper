@@ -17,11 +17,52 @@ def initialize_ollama(model='openhermes', verbose=False):
     return llm
 
 
-
-
 llm_openai=initialize_ollama(model='openai')
 llm_openhermes=initialize_ollama(model='openhermes')
 llm_openhermes = llm_openai
+
+
+@llm_func
+def random_set() -> set:
+    """Return a random set of numbers.
+    """
+    pass
+
+# Example usage
+query="Give me a random set of numbers."
+print(f"Query: {query}")
+myset = random_set(llm=llm_openai,query=query)
+print(myset)
+
+@llm_func
+def random_names() -> list:
+    """Return a list of random names.
+    """
+    pass
+
+# Example usage
+query="Give me 3 random names."
+print(f"Query: {query}")
+names = random_names(llm=llm_openai,query=query)
+print(names)
+
+@llm_func
+def random_identification() -> dict:
+    """Return a json object: {"username": __random_name__, "password": __random_password__}.
+    """
+    pass
+
+# Example usage
+query="Give me a random username and password."
+print(f"Query: {query}")
+random_id = random_identification(llm=llm_openai,query=query)
+print(random_id)
+
+# Example usage
+query="Give me a random password for username meirm."
+print(f"Query: {query}")
+random_id = random_identification(llm=llm_openai,query=query)
+print(random_id)
 
 
 @llm_func

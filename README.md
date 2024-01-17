@@ -1,6 +1,6 @@
 # LLM Functions Library Usage Guide
 
-This guide provides a comprehensive overview of how to use the `llm_wrapper` library, which offers a versatile wrapper, `llm_func`, designed for seamless interactions with various language learning models (LLMs). The wrapper simplifies model initialization, query execution, and structured output parsing, supporting a wide range of return types including basic data types (`int`, `float`, `str`, `bool`) and complex Pydantic `BaseModel` structures.
+This guide provides a comprehensive overview of how to use the `llm_wrapper` library, which offers a versatile wrapper, `llm_func`, designed for seamless interactions with various language learning models (LLMs). The wrapper simplifies model initialization, query execution, and structured output parsing, supporting a wide range of return types including basic data types (`int`, `float`, `str`, `bool`, `set`, `list`, `dict`) and complex Pydantic `BaseModel` structures.
 
 ## Getting Started
 ```python
@@ -110,6 +110,6 @@ print(user_details)  # Output will be a User instance
 
 ### Support and Development
 
-Currently, `llm_func` supports functions returning basic data types (`int`, `float`, `str`, `bool`) and Pydantic `BaseModel` instances. Support for additional types is under active development, and updates will be released periodically to enhance the library's functionality.
+Currently, `llm_func` supports functions returning basic data types (`int`, `float`, `str`, `bool`, `set`, `list`, `dict`) and Pydantic `BaseModel` instances. Support for additional types is under active development, and updates will be released periodically to enhance the library's functionality.
 
 By following these guidelines, you can efficiently use the `llm_wrapper` library to interact with language models, perform queries, and handle structured outputs, all while writing clear and maintainable code.

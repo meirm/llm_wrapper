@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from functools import wraps
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
+import json
 # from textwrap import dedent
 
 
@@ -40,6 +41,10 @@ def llm_func(func)->Union[int,float,str,bool,list,dict,set, BaseModel]:
                 response.model_dump_json()
                 return response
             except Exception as e:
+                if response is None:
+                    print("Response is None.")
+                    return None
+                print(f"Response:{response}")
                 print(f"Error: {e}")
                 print(e.__traceback__)
                 return None    
@@ -64,6 +69,10 @@ def llm_func(func)->Union[int,float,str,bool,list,dict,set, BaseModel]:
             chain = prompt | llm # | parser
             response = chain.invoke({"query": f"{query}"})
             try:
+                if response is None:
+                    print("Response is None.")
+                    return None
+                print(f"Response:{response}")
                 return parser.parse(response)
             except Exception as e:
                 print(f"Error: {e}")
@@ -101,6 +110,8 @@ class BasicTypeOutputParser:
         # Attempt to convert the response to the specified return type
         # print(f"Response: {response}")
         try:
+            if response is None:
+                return None
             if self.return_type == int:
                 return int(response)
             elif self.return_type == float:
@@ -110,11 +121,17 @@ class BasicTypeOutputParser:
             elif self.return_type == bool:
                 return bool(response.lower() == "true")
             elif self.return_type == list:
-                return list(response)
+                return list(json.loads(response))
             elif self.return_type == dict:
-                return dict(response)
+                return dict(json.loads(response))
             elif self.return_type == set:
-                return set(response)
+                # Convert set syntax to list syntax
+                llm_output_as_list = response.replace('{', '[').replace('}', ']')
+                # Parse the string into a list
+                parsed_list = json.loads(llm_output_as_list)
+                # Convert the list to a set
+                parsed_set = set(parsed_list)
+                return parsed_set
             else:
                 raise ValueError(f"Unsupported return type: {self.return_type}")
         except ValueError as e:
@@ -124,13 +141,21 @@ class BasicTypeOutputParser:
     def get_format_instructions(self):
         """Provides format instructions based on the return type for the LLM's templating system."""
         if self.return_type == int:
-            return "Please provide the response as an integer."
+            return "Please provide the response as an integer. "
         elif self.return_type == float:
-            return "Please provide the response as a floating-point number."
+            return "Please provide the response as a floating-point number. "
         elif self.return_type == str:
-            return "Please provide the response as text."
+            return "Please provide the response as text. "
+        elif self.return_type == bool:
+            return "Please provide the response as 'True' or 'False'. "
+        elif self.return_type == dict:
+            return "Please provide the response as a json dictionary. "
+        elif self.return_type == list:
+            return "Please provide the response as a json list. "
+        elif self.return_type == set:
+            return "Please provide the response as a set. "
         else:
-            return "Unsupported return type."
+            return "Unsupported return type. "
 
 
     
