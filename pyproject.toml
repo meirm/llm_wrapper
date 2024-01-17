@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "llm_wrapper"
-version = "0.1.0"
+version = "0.1.2"
 description = "My library description"
 authors = ["Meir Michanie <meirm@riunx.com>"]
 
@@ -9,7 +9,12 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
+pydantic = "^2.5.3"
+langchain = "^0.1.0"
+langchain_community = "^0.0.12"
+
+
 
 [project.urls]
 Homepage = "https://github.com/meirm/llm_functions"
