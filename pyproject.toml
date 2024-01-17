@@ -1,8 +1,12 @@
 [tool.poetry]
 name = "llm_wrapper"
-version = "0.1.3"
-description = "run llm functions with just inline documentation and no code"
+version = "0.1.5"
+description = "Run llm functions with just inline documentation and no code"
 authors = ["Meir Michanie <meirm@riunx.com>"]
+readme = "README.md"
+keywords = ["openai", "langchain", "pydantic"]
+homepage = "https://github.com/meirm/llm_functions"
+issues = "https://github.com/meirm/llm_functions/issues"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -14,8 +18,9 @@ pydantic = "^2.5.3"
 langchain = "^0.1.0"
 langchain_community = "^0.0.12"
 
+# Add classifiers
+[metadata.classifiers]
+license = "MIT"
+license_file = "LICENSE"
+description-file = "README.md"
 
-
-[project.urls]
-Homepage = "https://github.com/meirm/llm_functions"
-Issues = "https://github.com/meirm/llm_functions/issues"

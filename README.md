@@ -113,3 +113,7 @@ print(user_details)  # Output will be a User instance
 Currently, `llm_func` supports functions returning basic data types (`int`, `float`, `str`, `bool`, `set`, `list`, `dict`) and Pydantic `BaseModel` instances. Support for additional types is under active development, and updates will be released periodically to enhance the library's functionality.
 
 By following these guidelines, you can efficiently use the `llm_wrapper` library to interact with language models, perform queries, and handle structured outputs, all while writing clear and maintainable code.
+
+
+### Documentation
+[llm_wrapper Tutorial](https://github.com/meirm/llm_wrapper/blob/main/docs/tutorial.md)
