@@ -25,6 +25,17 @@ llm_openhermes = llm_openai
 
 
 @llm_func
+def check_grammar() -> float:
+    """Check the grammar of the sentence and return a float number between 0 and 1 reflecting its correctness."""
+    pass
+
+query = "I are a student."
+correctness = check_grammar(llm=llm_openai, query=query)
+print(correctness) 
+
+
+
+@llm_func
 def probability()-> float:
     """Return a probability between 0 and 1 of the text being offensive.
     """

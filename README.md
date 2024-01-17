@@ -3,7 +3,33 @@
 This guide provides a comprehensive overview of how to use the `llm_wrapper` library, which offers a versatile wrapper, `llm_func`, designed for seamless interactions with various language learning models (LLMs). The wrapper simplifies model initialization, query execution, and structured output parsing, supporting a wide range of return types including basic data types (`int`, `float`, `str`, `bool`) and complex Pydantic `BaseModel` structures.
 
 ## Getting Started
+```python
+from llm_wrapper import llm_func
+from langchain_openai import OpenAI
 
+@llm_func
+def famous_quote() -> str:
+    """Returns a famous quote according to the subject provided."""
+    pass
+
+llm = OpenAI()
+
+query = "Peace and War"
+quote = famous_quote(llm=llm, query=query)
+print(quote)  # Output: "Peace is not a relationship of nations. It is a condition of mind brought about by a serenity of soul. Peace is not merely the absence of war. It is also a state of mind. Lasting peace can come only to peaceful people. - Jawaharlal Nehru
+
+@llm_func
+def check_grammar() -> float:
+    """Check the grammar of the sentence and return a float number between 0 and 1 reflecting its correctness."""
+    pass
+
+query = "I are a student."
+correctness = check_grammar(llm=llm, query=query)
+print(correctness)  # Output: 0.5
+query = "I am a student."
+correctness = check_grammar(llm=llm, query=query)
+print(correctness)  # Output: 1.0
+```
 ### Installation
 
 Ensure the `llm_wrapper` library is installed in your environment. You can install it using pip:
