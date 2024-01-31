@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "llm_wrapper"
-version = "0.1.6"
+version = "0.1.7"
 description = "Run llm functions with just inline documentation and no code"
 authors = ["Meir Michanie <meirm@riunx.com>"]
 readme = "README.md"

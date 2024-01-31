@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Sequence
 from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
 from langchain_community.llms import Ollama
@@ -19,7 +19,7 @@ def initialize_ollama(model='openhermes', verbose=False):
 
 llm_openai=initialize_ollama(model='openai')
 llm_openhermes=initialize_ollama(model='openhermes')
-llm_openhermes = llm_openai
+default_llm = llm_openai
 
 
 @llm_func
@@ -31,7 +31,7 @@ def random_set() -> set:
 # Example usage
 query="Give me a random set of numbers."
 print(f"Query: {query}")
-myset = random_set(llm=llm_openai,query=query)
+myset = random_set(llm=default_llm,query=query)
 print(myset)
 
 @llm_func
@@ -43,7 +43,7 @@ def random_names() -> list:
 # Example usage
 query="Give me 3 random female latino names."
 print(f"Query: {query}")
-names = random_names(llm=llm_openai,query=query, on_error_retry=3)
+names = random_names(llm=default_llm,query=query, on_error_retry=3)
 print(names)
 
 @llm_func
@@ -55,13 +55,13 @@ def random_identification() -> dict:
 # Example usage
 query="Give me a random username and password."
 print(f"Query: {query}")
-random_id = random_identification(llm=llm_openai,query=query)
+random_id = random_identification(llm=default_llm,query=query)
 print(random_id)
 
 # Example usage
 query="Give me a random password for username meirm."
 print(f"Query: {query}")
-random_id = random_identification(llm=llm_openai,query=query)
+random_id = random_identification(llm=default_llm,query=query)
 print(random_id)
 
 
@@ -71,7 +71,7 @@ def check_grammar() -> float:
     pass
 
 query = "I are a student."
-correctness = check_grammar(llm=llm_openai, query=query)
+correctness = check_grammar(llm=default_llm, query=query)
 print(correctness) 
 
 
@@ -84,7 +84,7 @@ def probability()-> float:
 
 query="You are an idiot."
 print(f"Query: {query}")
-offensive = probability(llm=llm_openai,query=query)
+offensive = probability(llm=default_llm,query=query)
 print(offensive)
 
 
@@ -97,12 +97,12 @@ def is_offensive() -> bool:
 # Example usage
 query="You are an idiot."
 print(f"Query: {query}")
-offensive = is_offensive(llm=llm_openai,query=query)
+offensive = is_offensive(llm=default_llm,query=query)
 print(offensive)
 
 query="I am glad you are here."
 print(f"Query: {query}")
-offensive = is_offensive(llm=llm_openai,query=query)
+offensive = is_offensive(llm=default_llm,query=query)
 print(offensive)
 
 
@@ -115,20 +115,21 @@ def quote() -> str:
 # Example usage
 query="subject: love"
 print(f"Query: {query}")
-myquote = quote(llm=llm_openai,query=query)
+myquote = quote(llm=default_llm,query=query)
 
 print(myquote)
 
 @llm_func
-def dice_roller() -> int:
+def dice_roller() -> str:
     """Roll {nr_dices} and return the total value.
+    returns a comma separated list of the dice values.
     """
     pass
 
 # Example usage
 query="Roll 2 dices."
 print(f"Query: {query}")
-myroll = dice_roller(llm=llm_openai,query=query)
+myroll = dice_roller(llm=default_llm,query=query)
 print(myroll)
 
 
@@ -148,24 +149,26 @@ class BlogEntry(BaseModel):
 @llm_func
 def blog_entry() -> BlogEntry:
     """Create a short blog entry with a title and body.
+    The body should be two paragraphs long.
     """
     pass
 
 query="Why you should eat once a day."
 print(f"Query: {query}")
-answer = blog_entry(query=query, llm=llm_openai)
+answer = blog_entry(query=query, llm=default_llm, on_error_retry=3)
 print(answer.model_dump_json())
 
 # Usage example
 @llm_func
 def funny_blog_entry() -> BlogEntry:
     """Create a  short funny blog entry with a title and body.
+    The body should be two paragraphs long.
     """
     pass
 
 query="Why you should eat once a day."
 print(f"Query: {query}")
-answer = funny_blog_entry(query=query, llm=llm_openai)
+answer = funny_blog_entry(query=query, llm=default_llm, on_error_retry=3)
 print(answer.model_dump_json())
 
 
@@ -183,14 +186,14 @@ class AccessGranted(BaseModel):
 def access() -> AccessGranted:
     """Grant access to users aged 18 and above.
     If the username is 'John', access is denied and the reason is 'access denied'.
-    If the user is underage, the reason is 'bring your parents' else the reason is 'access granted'.
+    If the user is underage, access is denied and the reason is 'bring your parents' else the reason is 'access granted'.
     
     """
     pass
 
 query="My username is John and I am 50 years old."
 print(f"Query: {query}")
-access_granted = access(query=query, llm=llm_openai)
+access_granted = access(query=query, llm=default_llm)
 
 # Print the model schema with docstring
 print(access_granted.model_dump_json())
@@ -198,7 +201,7 @@ print(access_granted.model_dump_json())
 
 query="I am in kindergarten and my name is Mary."
 print(f"Query: {query}")
-access_granted = access(query=query, llm=llm_openai)
+access_granted = access(query=query, llm=default_llm)
 
 # Print the model schema with docstring
 print(access_granted.model_dump_json())
@@ -207,7 +210,7 @@ print(access_granted.model_dump_json())
 
 query="I am a teacher at Oxford."
 print(f"Query: {query}")
-access_granted = access(query=query, llm=llm_openai)
+access_granted = access(query=query, llm=default_llm)
 
 # Print the model schema with docstring
 print(access_granted.model_dump_json())
@@ -247,14 +250,16 @@ def sentiment() -> SentimentAnalysis:
     """
     pass
 
-
-my_wife = example_function(query="His name was Cristobal Nopil and he was 30 years old when he died.", llm=llm_openhermes)
+query = "His name was Cristobal Nopil and he was 30 years old when he died."
+print(f"Query: {query}")
+my_wife = example_function(query=query, llm=llm_openhermes)
 
 # Print the model schema with docstring
 print(my_wife.model_dump_json())
+
 query="Your coffee is bad."
 print(f"Query: {query}")
-ifeel = sentiment(query=query, llm=llm_openai)
+ifeel = sentiment(query=query, llm=default_llm)
 
 # Print the model schema with docstring
 print(ifeel.model_dump_json())
@@ -262,7 +267,7 @@ print(ifeel.model_dump_json())
 
 query="Your coffee is good."
 print(f"Query: {query}")
-ifeel = sentiment(query=query, llm=llm_openai)
+ifeel = sentiment(query=query, llm=default_llm, on_error_retry=3)
 
 # Print the model schema with docstring
 print(ifeel.model_dump_json())
@@ -271,7 +276,7 @@ print(ifeel.model_dump_json())
 
 query="Your coffee is just ok."
 print(f"Query: {query}")
-ifeel = sentiment(query=query, llm=llm_openai)
+ifeel = sentiment(query=query, llm=default_llm)
 
 # Print the model schema with docstring
 print(ifeel.model_dump_json())
