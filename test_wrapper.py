@@ -41,9 +41,9 @@ def random_names() -> list:
     pass
 
 # Example usage
-query="Give me 3 random names."
+query="Give me 3 random female latino names."
 print(f"Query: {query}")
-names = random_names(llm=llm_openai,query=query)
+names = random_names(llm=llm_openai,query=query, on_error_retry=3)
 print(names)
 
 @llm_func
@@ -156,7 +156,6 @@ print(f"Query: {query}")
 answer = blog_entry(query=query, llm=llm_openai)
 print(answer.model_dump_json())
 
-exit(0)
 # Usage example
 @llm_func
 def funny_blog_entry() -> BlogEntry:

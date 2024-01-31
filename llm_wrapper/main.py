@@ -18,12 +18,11 @@ def llm_func(func)->Union[int,float,str,bool,list,dict,set, BaseModel]:
     """
     
     return_type = get_return_annotation(func)
-    return_type = get_return_annotation(func)
     doc_string = get_docstring(func)
     if issubclass(return_type, BaseModel):
         parser = PydanticOutputParser(pydantic_object=return_type)
         prompt = PromptTemplate(
-            template="{doc_string}\n{format_instructions}\n{query}\n",
+            template="## CONTEXT\n{doc_string}\n\n##FORMAT\n{format_instructions}\n\n## OBJECTIVE\n{query}\n\n## JSON INSTANCE\n",
             input_variables=["query"],
             partial_variables={"format_instructions": parser.get_format_instructions(), "doc_string": doc_string}
         )
@@ -31,23 +30,27 @@ def llm_func(func)->Union[int,float,str,bool,list,dict,set, BaseModel]:
         @wraps(func)
         def wrapper(*args, **kwargs):
             llm = kwargs.get('llm')
+            on_error_retry:int = kwargs.get('on_error_retry',0)
             if llm is None:
                 raise Exception("LLM model not initialized.")
             query = kwargs.get('query')
             # print(f"Prompt: {prompt.format_prompt(query=query)}")
-            chain = prompt | llm | parser
-            response = chain.invoke({"query": f"{query}"})
+            chain = prompt | llm 
+            response = None
             try:
+                llm_response = chain.invoke({"query": f"{query}"})
+                response = parser.parse(llm_response)
                 response.model_dump_json()
                 return response
             except Exception as e:
-                if response is None:
+                if on_error_retry>0 and response is None and llm_response is not None:  # Error parsing response, retry
+                    kwargs['on_error_retry'] = on_error_retry-1
+                    return wrapper(*args, **kwargs)
+                else:
                     print("Response is None.")
-                    return None
-                print(f"Response:{response}")
-                print(f"Error: {e}")
-                print(e.__traceback__)
-                return None    
+                    if llm_response is not None:
+                        print(f"LLM Response:{llm_response}")
+                    return None  
         return wrapper
     else:
         parser = BasicTypeOutputParser(return_type=return_type)

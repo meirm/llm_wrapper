@@ -1,12 +1,11 @@
 [tool.poetry]
 name = "llm_wrapper"
-version = "0.1.5"
+version = "0.1.6"
 description = "Run llm functions with just inline documentation and no code"
 authors = ["Meir Michanie <meirm@riunx.com>"]
 readme = "README.md"
 keywords = ["openai", "langchain", "pydantic"]
 homepage = "https://github.com/meirm/llm_functions"
-issues = "https://github.com/meirm/llm_functions/issues"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
