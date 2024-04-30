@@ -8,3 +8,6 @@ __pycache__/
 venv/
 dist/
 data/
+storage/
+.env
+
